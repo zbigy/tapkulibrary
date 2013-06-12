@@ -44,10 +44,12 @@ static UIColor *grayGradientColor;
 static NSNumberFormatter *numberFormatter = nil;
 static UIImage *tileImage;
 
-#define TEXT_COLOR [UIColor colorWithWhite:84/255. alpha:1]
+#define WEEKDAY_TEXT_COLOR [UIColor colorWithWhite:166/255. alpha:1]
 #define TOP_BAR_HEIGHT 45.0f
+#define ROW_HEIGHT 44.0
+#define ROW_WIDTH 46.0
 #define DOT_FONT_SIZE 18.0f
-#define DATE_FONT_SIZE 24.0f
+#define DATE_FONT_SIZE 21.0f
 #define VIEW_WIDTH 320.0f
 
 #pragma mark - TKCalendarMonthTiles
@@ -80,7 +82,7 @@ static UIImage *tileImage;
 
 + (void) initialize{
     if (self == [TKCalendarMonthTiles class]){
-        tileImage = [UIImage imageWithContentsOfFile:TKBUNDLE(@"calendar/Month Calendar Date Tile.png")];
+        tileImage = [UIImage imageNamed:@"PPCalendarTile.png"];
     }
 }
 
@@ -88,6 +90,7 @@ static UIImage *tileImage;
 - (BOOL) isAccessibilityElement{
     return NO;
 }
+
 - (NSArray *) accessibleElements{
     if (_accessibleElements!=nil) return _accessibleElements;
 
@@ -115,10 +118,7 @@ static UIImage *tileImage;
 		element.accessibilityTraits = UIAccessibilityTraitButton;
 		element.accessibilityValue = [[self.marks objectAtIndex:i] boolValue] ? @"Has Events" : @"No Events";
 		[_accessibleElements addObject:element];
-		
 	}
-	
-	
 	
     return _accessibleElements;
 }
@@ -175,14 +175,10 @@ static UIImage *tileImage;
 		firstDate = currentMonth;
 	}
 	
-	
-	
 	NSInteger daysInMonth = [currentMonth daysBetweenDate:nextMonth];		
 	info.day = daysInMonth;
 	NSDate *lastInMonth = [NSDate dateWithDateComponents:info];
-	NSDateComponents *lastDateInfo = [lastInMonth dateComponentsWithTimeZone:timeZone];
-
-	
+	NSDateComponents *lastDateInfo = [lastInMonth dateComponentsWithTimeZone:timeZone];	
 	
 	if(lastDateInfo.weekday < 7 && sunday){
 		
@@ -238,7 +234,7 @@ static UIImage *tileImage;
 	self.datesArray = dates;
 	NSUInteger numberOfDaysBetween = [dates[0] daysBetweenDate:[dates lastObject]];
 	NSUInteger scale = (numberOfDaysBetween / 7) + 1;
-	CGFloat h = 44.0f * scale;
+	CGFloat h = ROW_HEIGHT * scale;
 	
 	
 	NSDateComponents *todayInfo = [[NSDate date] dateComponentsWithTimeZone:self.timeZone];
@@ -279,12 +275,13 @@ static UIImage *tileImage;
 	NSInteger row = index / 7;
 	NSInteger col = index % 7;
 	
-	return CGRectMake(col*46-1, row*44+6, 46, 44);
+	return CGRectMake(col*ROW_WIDTH-1, row*ROW_HEIGHT+6, ROW_WIDTH, ROW_HEIGHT);
 }
 - (void) drawTileInRect:(CGRect)r day:(NSInteger)day mark:(BOOL)mark font:(UIFont*)f1 font2:(UIFont*)f2 context:(CGContextRef)context{
 
     NSString *str = [numberFormatter stringFromNumber:@(day)];
 	r.size.height -= 2;
+    r.origin.y += 6;
 	
 	CGContextSetPatternPhase(context, CGSizeMake(r.origin.x, r.origin.y - 2));
 
@@ -311,7 +308,7 @@ static UIImage *tileImage;
 	
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	UIImage *tile = tileImage;
-	CGRect r = CGRectMake(-1, 0, 46, 44);
+	CGRect r = CGRectMake(-1, 0, ROW_WIDTH, ROW_HEIGHT);
 	
 	CGContextSetInterpolationQuality(context, kCGInterpolationNone);
 	CGContextDrawTiledImage(context, r, tile.CGImage);
@@ -321,7 +318,7 @@ static UIImage *tileImage;
 		NSInteger index = today +  pre-1;
 		CGRect r = [self rectForCellAtIndex:index];
 		r.origin.y -= 6;
-		[[UIImage imageWithContentsOfFile:TKBUNDLE(@"calendar/Month Calendar Today Tile.png")] drawInRect:r];
+		//[[UIImage imageWithContentsOfFile:TKBUNDLE(@"calendar/Month Calendar Today Tile.png")] drawInRect:r];
 	}
 	
 	
@@ -329,7 +326,7 @@ static UIImage *tileImage;
 	float myColorValues[] = {1, 1, 1, .8};
     CGColorSpaceRef myColorSpace = CGColorSpaceCreateDeviceRGB();
     CGColorRef whiteColor = CGColorCreate(myColorSpace, myColorValues);
-	CGContextSetShadowWithColor(context, CGSizeMake(0,1), 0, whiteColor);
+	//CGContextSetShadowWithColor(context, CGSizeMake(0,1), 0, whiteColor);
 
 	float darkColorValues[] = {0, 0, 0, .5};
     CGColorRef darkColor = CGColorCreate(myColorSpace, darkColorValues);
@@ -338,9 +335,9 @@ static UIImage *tileImage;
 	NSInteger index = 0, mc = self.marks.count;
 	
 	
-	UIFont *font = [UIFont boldSystemFontOfSize:DATE_FONT_SIZE];
+	UIFont *font = [UIFont scadaFontOfSize:DATE_FONT_SIZE];
 	UIFont *font2 =[UIFont boldSystemFontOfSize:DOT_FONT_SIZE];
-	UIColor *color = grayGradientColor;
+    UIColor *color = [UIColor darkGrayColor];
 	
 	if(firstOfPrev>0){
 		[color set];
@@ -355,7 +352,7 @@ static UIImage *tileImage;
 	}
 	
 	
-	color = gradientColor;
+	color = [UIColor whiteColor];
 	[color set];
 	
 
@@ -365,18 +362,23 @@ static UIImage *tileImage;
 		
 		r = [self rectForCellAtIndex:index];
 		if(today == i){
-			CGContextSetShadowWithColor(context, CGSizeMake(0,-1), 0, darkColor);
-			[[UIColor whiteColor] set];
-			r.origin.y += 1;
+			//CGContextSetShadowWithColor(context, CGSizeMake(0,-1), 0, darkColor);
+			[[UIColor colorWithRed:25/255.0 green:160/255.0 blue:222/255.0 alpha:1.0] set];
+			//r.origin.y += 1;
 		}
 		
 		BOOL mark = mc > 0 && index < mc ? [self.marks[index] boolValue] : NO;
 		[self drawTileInRect:r day:i mark:mark font:font font2:font2 context:context];
 		
 		if(today == i){
-			CGContextSetShadowWithColor(context, CGSizeMake(0,1), 0, whiteColor);
+			//CGContextSetShadowWithColor(context, CGSizeMake(0,1), 0, whiteColor);
 			[color set];
 		}
+        else
+        {
+            //CGContextSetShadowWithColor(context, CGSizeMake(0,0), 0, whiteColor);
+			[color set];
+        }
 		index++;
 	}
 	
@@ -384,7 +386,7 @@ static UIImage *tileImage;
 	CGColorRelease(whiteColor);
 	CGColorSpaceRelease(myColorSpace);
 	
-	[grayGradientColor set];
+	[[UIColor darkGrayColor] set];
 	NSInteger i = 1;
 	while(index % 7 != 0){
 		r = [self rectForCellAtIndex:index];
@@ -406,22 +408,21 @@ static UIImage *tileImage;
 	
 	selectedDay = day;
 	selectedPortion = 1;
-	self.currentDay.font = [UIFont boldSystemFontOfSize:DATE_FONT_SIZE];
+	self.currentDay.font = [UIFont scadaFontOfSize:DATE_FONT_SIZE];
 
 	
 	BOOL hasDot = NO;
 	
 	if(day == today){
-		self.currentDay.shadowOffset = CGSizeMake(0, -1);
-		self.dot.shadowOffset = CGSizeMake(0, -1);
-		self.selectedImageView.image = [UIImage imageWithContentsOfFile:TKBUNDLE(@"calendar/Month Calendar Today Selected Tile.png")];
+		//self.currentDay.shadowOffset = CGSizeMake(0, -1);
+		//self.dot.shadowOffset = CGSizeMake(0, -1);
+		//self.selectedImageView.image = [UIImage imageWithContentsOfFile:TKBUNDLE(@"calendar/Month Calendar Today Selected Tile.png")];
 		markWasOnToday = YES;
 		
 	}else if(markWasOnToday){
-		self.dot.shadowOffset = CGSizeMake(0, -1);
-		self.currentDay.shadowOffset = CGSizeMake(0, -1);
-		NSString *path = TKBUNDLE(@"calendar/Month Calendar Date Tile Selected.png");
-		self.selectedImageView.image = [[UIImage imageWithContentsOfFile:path] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
+		//self.dot.shadowOffset = CGSizeMake(0, -1);
+		//self.currentDay.shadowOffset = CGSizeMake(0, -1);
+		self.selectedImageView.image = [[UIImage imageNamed:@"PPCalendarCellSelected.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
 		markWasOnToday = NO;
 	}
 	
@@ -443,7 +444,7 @@ static UIImage *tileImage;
 		row--;
 	}
 
-	self.selectedImageView.frame = CGRectMakeWithSize((column*46)-1, (row*44)-1, self.selectedImageView.frame.size);
+	self.selectedImageView.frame = CGRectMakeWithSize((column*ROW_WIDTH)-1, (row*ROW_HEIGHT)-1, self.selectedImageView.frame.size);
 	[self addSubview:self.selectedImageView];
 	
 	
@@ -480,10 +481,10 @@ static UIImage *tileImage;
 	if(p.x > self.bounds.size.width || p.x < 0) return;
 	if(p.y > self.bounds.size.height || p.y < 0) return;
 	
-	NSInteger column = p.x / 46, row = p.y / 44;
+	NSInteger column = p.x / ROW_WIDTH, row = p.y / ROW_HEIGHT;
 	NSInteger day = 1, portion = 0;
 	
-	if(row == (int) (self.bounds.size.height / 44)) row --;
+	if(row == (int) (self.bounds.size.height / ROW_HEIGHT)) row --;
 	
 	NSInteger fir = firstWeekday - 1;
 	if(!startOnSunday && fir == 0) fir = 7;
@@ -504,7 +505,7 @@ static UIImage *tileImage;
 		day = day - daysInMonth;
 	}
 	
-	self.currentDay.font = [UIFont boldSystemFontOfSize:DATE_FONT_SIZE];
+	self.currentDay.font = [UIFont scadaFontOfSize:DATE_FONT_SIZE];
 	self.currentDay.hidden = NO;
 	self.dot.hidden = NO;
 	
@@ -516,15 +517,14 @@ static UIImage *tileImage;
 		self.dot.hidden = YES;
 		
 	}else if(portion==1 && day == today){
-		self.currentDay.shadowOffset = CGSizeMake(0, -1);
-		self.dot.shadowOffset = CGSizeMake(0, -1);
-		self.selectedImageView.image = [UIImage imageWithContentsOfFile:TKBUNDLE(@"calendar/Month Calendar Today Selected Tile.png")];
+		//self.currentDay.shadowOffset = CGSizeMake(0, -1);
+		//self.dot.shadowOffset = CGSizeMake(0, -1);
+		//self.selectedImageView.image = [UIImage imageWithContentsOfFile:TKBUNDLE(@"calendar/Month Calendar Today Selected Tile.png")];
 		markWasOnToday = YES;
 	}else if(markWasOnToday){
-		self.dot.shadowOffset = CGSizeMake(0, -1);
-		self.currentDay.shadowOffset = CGSizeMake(0, -1);
-		NSString *path = TKBUNDLE(@"calendar/Month Calendar Date Tile Selected.png");
-		self.selectedImageView.image = [[UIImage imageWithContentsOfFile:path] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
+		//self.dot.shadowOffset = CGSizeMake(0, -1);
+		//self.currentDay.shadowOffset = CGSizeMake(0, -1);
+		self.selectedImageView.image = [[UIImage imageNamed:@"PPCalendarCellSelected.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
 		markWasOnToday = NO;
 	}
 	
@@ -543,11 +543,13 @@ static UIImage *tileImage;
 
 	
 	
-	self.selectedImageView.frame = CGRectMakeWithSize((column*46)-1, (row*44)-1, self.selectedImageView.frame.size);
-	
+	self.selectedImageView.frame = CGRectMakeWithSize((column*ROW_WIDTH)-1, (row*ROW_HEIGHT), self.selectedImageView.frame.size);
+	if(day == today)
+        self.currentDay.textColor = [UIColor colorWithRed:25/255.0 green:160/255.0 blue:222/255.0 alpha:1.0];
+    else
+        self.currentDay.textColor = [UIColor whiteColor];
+    
 	if(day == selectedDay && selectedPortion == portion) return;
-	
-	
 	
 	if(portion == 1){
 		selectedDay = day;
@@ -577,15 +579,15 @@ static UIImage *tileImage;
 	if(_currentDay) return _currentDay;
 
 	CGRect r = self.selectedImageView.bounds;
-	r.origin.y -= 1;
+	//r.origin.y -= 1;
 	_currentDay = [[UILabel alloc] initWithFrame:r];
 	_currentDay.text = @"1";
 	_currentDay.textColor = [UIColor whiteColor];
 	_currentDay.backgroundColor = [UIColor clearColor];
-	_currentDay.font = [UIFont boldSystemFontOfSize:DATE_FONT_SIZE];
+	_currentDay.font = [UIFont scadaFontOfSize:DATE_FONT_SIZE];
 	_currentDay.textAlignment = NSTextAlignmentCenter;
-	_currentDay.shadowColor = [UIColor darkGrayColor];
-	_currentDay.shadowOffset = CGSizeMake(0, -1);
+	//_currentDay.shadowColor = [UIColor darkGrayColor];
+	//_currentDay.shadowOffset = CGSizeMake(0, -1);
 	return _currentDay;
 }
 - (UILabel *) dot{
@@ -607,11 +609,10 @@ static UIImage *tileImage;
 - (UIImageView *) selectedImageView{
 	if(_selectedImageView) return _selectedImageView;
 	
-	NSString *path = TKBUNDLE(@"calendar/Month Calendar Date Tile Selected.png");
-	UIImage *img = [[UIImage imageWithContentsOfFile:path] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
+	UIImage *img = [[UIImage imageNamed:@"PPCalendarCellSelected.png"] stretchableImageWithLeftCapWidth:1 topCapHeight:0];
 	_selectedImageView = [[UIImageView alloc] initWithImage:img];
 	_selectedImageView.layer.magnificationFilter = kCAFilterNearest;
-	_selectedImageView.frame = CGRectMake(0, 0, 47, 45);
+	_selectedImageView.frame = CGRectMake(0, 0, ROW_WIDTH, ROW_HEIGHT);
 	return _selectedImageView;
 }
 
@@ -647,7 +648,7 @@ static UIImage *tileImage;
 }
 - (id) initWithSundayAsFirst:(BOOL)s timeZone:(NSTimeZone*)timeZone{
 	if (!(self = [super initWithFrame:CGRectMake(0, 0, VIEW_WIDTH, VIEW_WIDTH)])) return nil;
-	self.backgroundColor = [UIColor colorWithHex:0xaaaeb6];
+	self.backgroundColor = [UIColor colorWithRed:42.0/225 green:42.0/225 blue:42.0/225 alpha:1.0];
 	self.timeZone = timeZone;
 	self.sunday = s;
 	
@@ -697,7 +698,7 @@ static UIImage *tileImage;
 	
 	NSInteger i = 0;
 	for(NSString *s in ar){
-		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(46*i + (i==0?0:-1), 30, 45, 15)];
+		UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(ROW_WIDTH*i + (i==0?0:-1), 30, 45, 15)];
 		[self addSubview:label];
         
         // Added Accessibility Labels
@@ -719,11 +720,11 @@ static UIImage *tileImage;
         
 		label.text = s;
 		label.textAlignment = NSTextAlignmentCenter;
-		label.shadowColor = [UIColor whiteColor];
-		label.shadowOffset = CGSizeMake(0, 1);
-		label.font = [UIFont boldSystemFontOfSize:10];
+		//label.shadowColor = [UIColor whiteColor];
+		//label.shadowOffset = CGSizeMake(0, 1);
+		label.font = [UIFont scadaFontOfSize:15];
 		label.backgroundColor = [UIColor clearColor];
-		label.textColor = TEXT_COLOR;
+		label.textColor = WEEKDAY_TEXT_COLOR;
 		i++;
 	}
 	
@@ -870,9 +871,9 @@ static UIImage *tileImage;
 	NSInteger overlap =  0;
 	
 	if(isNext)
-		overlap = [newTile.monthDate isEqualToDate:dates[0]] ? 0 : 44;
+		overlap = [newTile.monthDate isEqualToDate:dates[0]] ? 0 : ROW_HEIGHT;
 	else
-		overlap = [self.currentTile.monthDate compare:[dates lastObject]] !=  NSOrderedDescending ? 44 : 0;
+		overlap = [self.currentTile.monthDate compare:[dates lastObject]] !=  NSOrderedDescending ? ROW_HEIGHT : 0;
 	
 	
 	float y = isNext ? self.currentTile.bounds.size.height - overlap : newTile.bounds.size.height * -1 + overlap +2;
@@ -929,7 +930,7 @@ static UIImage *tileImage;
 #pragma mark Properties & Public Functions
 - (UIView *) topBackground{
 	if(_topBackground) return _topBackground;
-	
+	/*
 	TKGradientView *gradient = [[TKGradientView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, TOP_BAR_HEIGHT)];
 	gradient.colors = @[[UIColor colorWithHex:0xf4f4f5],[UIColor colorWithHex:0xccccd1]];
 	gradient.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -940,18 +941,31 @@ static UIImage *tileImage;
 	
 	gradient.userInteractionEnabled = YES;
 	_topBackground = gradient;
+     */
+    
+    UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, TOP_BAR_HEIGHT)];
+	topView.backgroundColor = [UIColor colorWithRed:42.0/225 green:42.0/225 blue:42.0/225 alpha:1.0];
+	topView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 44, topView.bounds.size.width, 1)];
+	line.backgroundColor = [UIColor blackColor];
+	line.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+	[topView addSubview:line];
+	
+	topView.userInteractionEnabled = YES;
+	_topBackground = topView;
+    
 	return _topBackground;
 }
 - (UILabel *) monthYear{
 	if(_monthYear) return _monthYear;
 
-	_monthYear = [[UILabel alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, VIEW_WIDTH, 36), 40, 6)];
+	_monthYear = [[UILabel alloc] initWithFrame:CGRectInset(CGRectMake(0, 0, VIEW_WIDTH, 30), 40, 2)];
 	_monthYear.textAlignment = NSTextAlignmentCenter;
 	_monthYear.backgroundColor = [UIColor clearColor];
-	_monthYear.font = [UIFont boldSystemFontOfSize:22];
-	_monthYear.shadowColor = [UIColor whiteColor];
-	_monthYear.shadowOffset = CGSizeMake(0,1);
-	_monthYear.textColor = gradientColor;
+	_monthYear.font = [UIFont helveticaNueueCondensedBoldOfSize:20];
+	//_monthYear.shadowColor = [UIColor whiteColor];
+	//_monthYear.shadowOffset = CGSizeMake(0,1);
+	_monthYear.textColor = [UIColor whiteColor];
 	return _monthYear;
 }
 - (UIButton *) leftArrow{
@@ -962,7 +976,7 @@ static UIImage *tileImage;
 	_leftArrow.frame = CGRectMake(0, 0, 52, 36);
 	_leftArrow.accessibilityLabel = @"Previous Month";
 	[_leftArrow addTarget:self action:@selector(changeMonth:) forControlEvents:UIControlEventTouchUpInside];
-	[_leftArrow setImage:[UIImage imageNamedTK:@"calendar/calendar_left_arrow"] forState:0];
+	[_leftArrow setImage:[UIImage imageNamed:@"PPCalendarLeftButton.png"] forState:0];
 	return _leftArrow;
 }
 - (UIButton *) rightArrow{
@@ -973,7 +987,7 @@ static UIImage *tileImage;
 	_rightArrow.frame = CGRectMake(VIEW_WIDTH-52, 0, 52, 36);
 	_rightArrow.accessibilityLabel = @"Next Month";
 	[_rightArrow addTarget:self action:@selector(changeMonth:) forControlEvents:UIControlEventTouchUpInside];
-	[_rightArrow setImage:[UIImage imageNamedTK:@"calendar/calendar_right_arrow"] forState:0];
+	[_rightArrow setImage:[UIImage imageNamed:@"PPCalendarRightButton.png"] forState:0];
 	return _rightArrow;
 }
 - (UIView *) tileBox{

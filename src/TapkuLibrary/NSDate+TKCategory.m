@@ -140,7 +140,7 @@
 	dateFormatter.dateFormat = [NSDateFormatter dateFormatFromTemplate:@"yMMMM"
 															   options:0
 																locale:[NSLocale currentLocale]];
-	return [dateFormatter stringFromDate:self];
+	return [[dateFormatter stringFromDate:self] uppercaseString];
 }
 
 - (NSString*) monthString{
