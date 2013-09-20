@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -31,6 +31,7 @@
 
 #import <UIKit/UIKit.h>
 
+/** A table view cell with a text field. */
 @interface TKTextFieldCell : UITableViewCell
 
 /** The text field. */

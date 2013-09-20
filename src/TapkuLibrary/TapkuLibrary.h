@@ -1,6 +1,6 @@
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -33,14 +33,18 @@
 #import "NSDate+TKCategory.h"
 #import "NSArray+TKCategory.h"
 #import "NSMutableArray+TKCategory.h"
+#import "UIDevice+TKCategory.h"
+#import "UIScreen+TKCategory.h"
 #import "UIView+TKCategory.h"
 #import "UIImage+TKCategory.h"
 #import "UIColor+TKCategory.h"
 #import "UIImageView+TKCategory.h"
 #import "UIScrollview+TKCategory.h"
 #import "UIButton+TKCategory.h"
+#import "UITextField+TKCategory.h"
 #import "UIImagePickerController+TKCategory.h"
-
+#import "UIViewController+TKCategory.h"
+#import "TKWebViewController.h"
 
 #import "TKWindow.h"
 #import "TKViewController.h"
@@ -60,6 +64,8 @@
 #import "TKImageCache.h"
 
 
+#import "TKGlowButton.h"
+#import "TKShimmerLabel.h"
 
 // CELLS
 #import "TKLabelCell.h"
@@ -91,3 +97,6 @@
 
 // Coverflow
 #import "TKCoverflowView.h"
+
+
+#import "TKReorderTableView.h"

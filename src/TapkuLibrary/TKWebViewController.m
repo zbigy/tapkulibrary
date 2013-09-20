@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -34,11 +34,21 @@
 
 @implementation TKWebViewController
 
+- (id) initWithURL:(NSURL*)URL{
+	if(!(self=[super init])) return nil;
+	self.URL = URL;
+	return self;
+}
+
 - (void) loadView{
 	[super loadView];
 	self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
 	self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[self.view addSubview:self.webView];
+}
+- (void) viewDidLoad{
+	[super viewDidLoad];
+	[self.webView loadRequest:[NSURLRequest requestWithURL:self.URL]];
 }
 
 @end

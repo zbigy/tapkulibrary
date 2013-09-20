@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -129,6 +129,26 @@
 	return [self isSameDay:[NSDate date] timeZone:timeZone];
 }
 
+- (BOOL) isTomorrow{
+	return [self isTomorrowWithTimeZone:[NSTimeZone defaultTimeZone]];
+}
+- (BOOL) isTomorrowWithTimeZone:(NSTimeZone*)timeZone{
+	NSDateComponents *comp = [[NSDate date] dateComponentsWithTimeZone:timeZone];
+	comp.day++;
+	NSDate *actualTomorrow = [NSDate dateWithDateComponents:comp];
+	return [self isSameDay:actualTomorrow timeZone:timeZone];
+}
+
+
+- (BOOL) isYesterday{
+	return [self isYesterdayWithTimeZone:[NSTimeZone defaultTimeZone]];
+}
+- (BOOL) isYesterdayWithTimeZone:(NSTimeZone*)timeZone{
+	NSDateComponents *comp = [[NSDate date] dateComponentsWithTimeZone:timeZone];
+	comp.day--;
+	NSDate *actualTomorrow = [NSDate dateWithDateComponents:comp];
+	return [self isSameDay:actualTomorrow timeZone:timeZone];
+}
 
 #pragma mark Month & Year String
 - (NSString *) monthYearString{

@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -40,16 +40,30 @@
 
 #pragma mark Yesterday
 /** Creates and returns a new date set to the previous day and current time.
- @return A `NSDate` object set to the current month.
+ @return A `NSDate` object set to yesterday.
  */
 + (NSDate *) yesterday;
 
 /** Creates and returns a new date set to the previous day and current time.
- @param timeZone The time zone to repect. 
+ @param timeZone The time zone to repect.
  @note Things get tricky with respect to day light saving. Simple subtraction of 24 hours (using @code[NSDate dateWithTimeIntervalSinceNow:]@endcode) might not yield the expected results.
- @return A `NSDate` object set to the current month.
+ @return A `NSDate` object set to yesterday.
  */
 + (NSDate*) yesterdayWithTimeZone:(NSTimeZone*)timeZone;
+
+
+
+/** Creates and returns a new date set to tomorrow's day and current time.
+ @return A `NSDate` object set to tomorrow.
+ */
++ (NSDate*) tomorrow;
+
+/** Creates and returns a new date set to the tomorrow's day and current time.
+ @param timeZone The time zone to repect.
+ @note Things get tricky with respect to day light saving. Simple subtraction of 24 hours (using @code[NSDate dateWithTimeIntervalSinceNow:]@endcode) might not yield the expected results.
+ @return A `NSDate` object set to tomorrow.
+ */
++ (NSDate*) tomorrowWithTimeZone:(NSTimeZone*)timeZone;
 
 
 #pragma mark Month
@@ -80,11 +94,13 @@
 
 #pragma mark Same Day
 /** Returns whether the compared date shares the date with respect to the default time zone.
+ @param anotherDate The data to compare.
  @return YES if the two dates share the same year, month day. Otherwise NO.
  */
 - (BOOL) isSameDay:(NSDate*)anotherDate;
 
 /** Returns whether the compared date shares the date with respect to the given time zone.
+ @param anotherDate The data to compare.
  @param timeZone The time zone used to determine the current day.
  @return YES if the two dates share the same year, month day. Otherwise NO.
  */
@@ -101,7 +117,7 @@
 
 
 /** Returns number of months between two dates.
- @param date The other date to compare.
+ @param toDate The other date to compare.
  @param timeZone The time zone to respect.
  @return Returns number of months between two dates.
  */
@@ -121,6 +137,29 @@
  @return YES if the date object represents the current date, otherwise NO.
  */
 - (BOOL) isTodayWithTimeZone:(NSTimeZone*)timeZone;
+
+
+/** Returns a Boolean value that indicates whether the date object is that same date information as tomorrow.
+ @return YES if the date object represents tomorrow's date, otherwise NO.
+ */
+- (BOOL) isTomorrow;
+
+/** Returns a Boolean value that indicates whether the date object is that same date information as tomorrow.
+ @param timeZone The time zone to respect.
+ @return YES if the date object represents tomorrow's date, otherwise NO.
+ */
+- (BOOL) isTomorrowWithTimeZone:(NSTimeZone*)timeZone;
+
+
+/** Returns a Boolean value that indicates whether the date object is that same date information as yesterday.
+ @return YES if the date object represents yesterday's date, otherwise NO.
+ */
+- (BOOL) isYesterday;
+/** Returns a Boolean value that indicates whether the date object is that same date information as yesterday.
+ @param timeZone The time zone to respect.
+ @return YES if the date object represents yesterday's date, otherwise NO.
+ */
+- (BOOL) isYesterdayWithTimeZone:(NSTimeZone*)timeZone;
 
 
 #pragma mark Month & Year String

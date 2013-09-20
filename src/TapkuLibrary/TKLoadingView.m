@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -31,7 +31,6 @@
 
 #import "TKLoadingView.h"
 
-
 @implementation TKLoadingView
 
 
@@ -54,16 +53,31 @@
 }
 
 
+#define DELAY 0.25
+
 
 - (void) startAnimating{
-	if(!self.superview) return;
 	self.loadingLabel.hidden = NO;
+	self.loadingLabel.text = [NSString stringWithFormat:@"%@...",NSLocalizedString(@"Loading", @"Loading")];
+	if(!self.window) return;
+	
+	[self.loadingLabel sizeToFit];
+	self.loadingLabel.center = CGPointMake(self.frame.size.width/2.0, self.frame.size.height/2.0);
+	self.loadingLabel.frame = CGRectIntegral(self.loadingLabel.frame);
+	
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_next) object:nil];
-	[self performSelector:@selector(_next) withObject:nil afterDelay:0.3f];
+	[self performSelector:@selector(_next) withObject:nil afterDelay:DELAY];
 }
 - (void) stopAnimating{
 	self.loadingLabel.hidden = YES;
-	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(nextStep) object:nil];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_next) object:nil];
+}
+
+- (void) didMoveToWindow{
+	if(self.loadingLabel.hidden) return;
+	
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_next) object:nil];
+	[self performSelector:@selector(_next) withObject:nil afterDelay:DELAY];
 }
 
 
@@ -80,7 +94,7 @@
 		
 	self.loadingLabel.text = str;
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(_next) object:nil];
-	[self performSelector:@selector(_next) withObject:nil afterDelay:0.3f];
+	[self performSelector:@selector(_next) withObject:nil afterDelay:DELAY];
 	
 	
 }

@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -46,7 +46,7 @@
  UIWindow for the application is allocated and setup just before 
  this method is called. The default implementation does nothing.
  @param application The application instance.
- @param launchOption The launch options.
+ @param launchOptions The launch options.
  */
 - (void) application:(UIApplication *)application commonInitializationLaunching:(NSDictionary *)launchOptions;
 

@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || https://github.com/devinross/tapkulibrary
+ tapku || https://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -68,7 +68,6 @@
 - (id) initWithStyle:(UITableViewStyle)s{
 	if(!(self = [super initWithStyle:s])) return nil;
 	self.title = @"Tapku Library";
-	self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Back"] style:UIBarButtonItemStylePlain target:nil action:nil];
 	return self;
 }
 - (NSUInteger) supportedInterfaceOrientations{
@@ -124,7 +123,7 @@
 			[self.detailViewController setupWithMainController:vc];
 		else{
 			[vc setModalTransitionStyle:UIModalTransitionStyleCrossDissolve];
-			[self presentModalViewController:vc animated:YES];
+			[self presentViewController:vc animated:YES completion:nil];
 		}
 
 		return;

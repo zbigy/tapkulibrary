@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -31,10 +31,16 @@
 
 #import <UIKit/UIKit.h>
 
+/** Additional functionality for `UIImagePickerController`.  */
 @interface UIImagePickerController (TKCategory)
 
+/** The device has a camera.  */
 + (BOOL) hasCamera;
+
+/** The device has a front facing camera.  */
 + (BOOL) hasFrontCamera;
+
+/** The device has a rear facing camera.  */
 + (BOOL) hasRearCamera;
 
 @end

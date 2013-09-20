@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -39,7 +39,7 @@
 
 
 + (NSDictionary*) dataKeys{
-	return [NSDictionary dictionary];
+	return @{};
 }
 
 
@@ -71,7 +71,7 @@
 			NSString *format = [value lastObject];
 			NSString *key = [value firstObject];
 			
-			if(VALID_OBJECT(format) && VALID_OBJECT(key)){
+			if(VALID_OBJECT(format) && VALID_OBJECT(key) && VALID_OBJECT(dictionary[key])){
 				if(!formatter) formatter = [[NSDateFormatter alloc] init];
 				[formatter setDateFormat:format];
 				NSDate *date = [formatter dateFromString:dictionary[key]];
@@ -95,16 +95,16 @@
 		
 		id value = [self valueForKey:key];
 		
-		if(value && [value isKindOfClass:[NSDate date]]){
+		if(value && [value isKindOfClass:[NSDate class]]){
 			NSArray *array = dataKeys[key];
 			
 			if(!formatter) formatter = [[NSDateFormatter alloc] init];
 			formatter.dateFormat = array.lastObject;
 			
 			NSString *date = [formatter stringFromDate:value];
-			[ret setObject:date forKey:array[0]];
+			ret[array[0]] = date;
 		}else if(value)
-			[ret setObject:value forKey:dataKeys[key]];
+			ret[dataKeys[key]] = value;
 		
 	}
 	return ret;
@@ -113,6 +113,25 @@
 
 
 #pragma mark Process JSON in Background
+
+- (void) processJSON:(NSData*)data withCompletion:(TKJSONCompletionBlock)block{
+	[self processJSON:data options:0 withCompletion:block];
+}
+
+- (void) processJSON:(NSData*)data options:(NSJSONReadingOptions)options withCompletion:(TKJSONCompletionBlock)block{
+	
+	dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0ul);
+    dispatch_async(queue, ^{
+		
+		NSError *error;
+		id object = [NSJSONSerialization JSONObjectWithData:data options:options error:&error];
+		dispatch_sync(dispatch_get_main_queue(), ^{
+			block(object,error);
+		});
+	});
+		
+}
+
 
 - (void) processJSONDataInBackground:(NSData *)data withCallbackSelector:(SEL)callback{
 	
@@ -170,7 +189,7 @@
 
 	if(callback) dict[@"callback"] = NSStringFromSelector(callback);
 	if(backgroundProcessor) dict[@"backgroundProcessor"] = NSStringFromSelector(backgroundProcessor);
-	if(errroSelector) [dict setObject:NSStringFromSelector(errroSelector) forKey:@"errroSelector"];
+	if(errroSelector) dict[@"errroSelector"] = NSStringFromSelector(errroSelector);
 	
 	
 	[self performSelectorInBackground:@selector(_processJSONData:) withObject:dict];
@@ -200,8 +219,6 @@
 			if(background) object = [self performSelector:NSSelectorFromString(background) withObject:object];
 			[self performSelectorOnMainThread:NSSelectorFromString(callback) withObject:object waitUntilDone:NO];
 		}
-		
-		
 	}
 }
 

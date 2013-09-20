@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -31,8 +31,10 @@
 
 #import <Foundation/Foundation.h>
 
+/** Additional functionality for `NSMutableArray`.  */
 @interface NSMutableArray (TKCategory)
 
+/** Shuffles the order of the objects. */
 - (void) shuffle;
 
 @end

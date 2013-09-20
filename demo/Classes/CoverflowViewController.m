@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -141,8 +141,7 @@
 
 - (void) info{
 	if([UIDevice currentDevice].userInterfaceIdiom == UIUserInterfaceIdiomPhone && self.coverflow.tag != 0){
-		[self dismissModalViewControllerAnimated:YES];
-
+		[self dismissViewControllerAnimated:YES completion:nil];
 		return;
 	}
 	

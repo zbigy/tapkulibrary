@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || https://github.com/devinross/tapkulibrary
+ tapku || https://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -43,7 +43,10 @@
 
 	self.root = [[RootViewController alloc] initWithStyle:UITableViewStyleGrouped];
 	self.navigationController = [[UINavigationController alloc] initWithRootViewController:self.root];
-
+	self.navigationController.view.backgroundColor = [UIColor whiteColor];
+	self.window.backgroundColor = [UIColor whiteColor];
+	
+	
 	if([[UIDevice currentDevice] userInterfaceIdiom] ==  UIUserInterfaceIdiomPad){
 		
 		self.splitViewController = [[UISplitViewController alloc] init];

@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -75,6 +75,9 @@
 - (void) loadView{
 	[super loadView];
 	self.view.backgroundColor = [UIColor blackColor];
+	
+	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
+		self.edgesForExtendedLayout = UIRectEdgeNone;
 	
 	self.monthView = [[TKCalendarMonthView alloc] initWithSundayAsFirst:self.sundayFirst timeZone:self.timeZone];
 	self.monthView.dataSource = self;

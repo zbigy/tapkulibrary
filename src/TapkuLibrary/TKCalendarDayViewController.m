@@ -3,7 +3,7 @@
 //  Created by Devin Ross on 7/28/09.
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -38,7 +38,9 @@
 #pragma mark View Lifecycle
 - (void) loadView{
 	[super loadView];
-	
+	if([self respondsToSelector:@selector(edgesForExtendedLayout)])
+		self.edgesForExtendedLayout = UIRectEdgeNone;
+
 	self.dayView = [[TKCalendarDayView alloc] initWithFrame:self.view.bounds];
 	self.dayView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	self.dayView.delegate = self;
@@ -51,7 +53,7 @@
 
 #pragma mark TKCalendarDayViewDelegate
 - (NSArray *) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventsForDate:(NSDate *)eventDate{
-	return [NSArray array];
+	return @[];
 }
 - (void) calendarDayTimelineView:(TKCalendarDayView*)calendarDayTimeline eventViewWasSelected:(TKCalendarDayEventView *)eventView{
 

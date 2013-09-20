@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -215,7 +215,7 @@
 	// change the animation duration accordingly
 	// avg person reads 200 words per minute
 	NSArray * words = [_alerts[0][0] componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-	double duration = MAX(((double)[words count]*60.0/200.0),1);
+	double duration = MAX(((double)[words count]*60.0/200.0),1.4f);
 	
 	[UIView setAnimationDelay:duration];
 	[UIView setAnimationDelegate:self];
@@ -244,7 +244,7 @@
 		[_alerts addObject:@[message,image]];
 	else if(message)
 		[_alerts addObject:@[message]];
-	else
+	else if(image)
 		[_alerts addObject:@[image]];
 	if(!_active) [self showAlerts];
 }

@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -39,10 +39,10 @@
  
 	
 	 @{
-	 @"identifier" : @"id",
-	 @"name" : @"name",
-	 @"createdAt" : @[@"created_at",@"yyyy-MM-dd'T'HH:mm:ss"], // For NSDate
-	 @"updatedAt" : @[@"updated_at",@"yyyy-MM-dd"]
+		@"identifier" : @"id",
+		@"name" : @"name",
+		@"createdAt" : @[@"created_at",@"yyyy-MM-dd'T'HH:mm:ss"], // For NSDate
+		@"updatedAt" : @[@"updated_at",@"yyyy-MM-dd"]
 	 };
  
  
@@ -73,6 +73,21 @@
 - (NSDictionary*) dataDictionary;
 
 
+
+typedef void (^TKJSONCompletionBlock)(id object,NSError *error);
+
+/** Process JSON data in the background with a completion block.
+ @param data The JSON data.
+ @param block The block that will be performed upon the parsing of the json data. The process data will be included as an object with the selector.
+ */
+- (void) processJSON:(NSData*)data withCompletion:(TKJSONCompletionBlock)block;
+
+/** Process JSON data in the background with a completion block.
+ @param data The JSON data.
+ @param options An json parsing options to be included will parsing the JSON data.
+ @param block The block that will be performed upon the parsing of the json data. The process data will be included as an object with the selector.
+ */
+- (void) processJSON:(NSData*)data options:(NSJSONReadingOptions)options withCompletion:(TKJSONCompletionBlock)block;
 
 /** Process JSON data in the background with a callback selector.
  @param data The JSON data.

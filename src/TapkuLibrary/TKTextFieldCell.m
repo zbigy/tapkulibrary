@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -49,7 +49,7 @@
 
 - (void) layoutSubviews {
     [super layoutSubviews];
-	_textField.frame = CGRectInset(self.contentView.bounds, 10, 4);
+	_textField.frame = CGRectInset(self.contentView.bounds, 14, 4);
 }
 
 

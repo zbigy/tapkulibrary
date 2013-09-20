@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || http://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -33,7 +33,6 @@
 #import <UIKit/UIKit.h>
 
 
-@class TKCalendarMonthTiles;
 @protocol TKCalendarMonthViewDelegate, TKCalendarMonthViewDataSource;
 
 #pragma mark - TKCalendarMonthView
@@ -90,7 +89,7 @@
 - (void) reloadData;
 
 /** Animates the calendar to the next or previous month.
- @param isNext YES for next month, NO for previous month.
+ @param next YES for next month, NO for previous month.
  */
 - (void) animateToNextOrPreviousMonth:(BOOL)next;
 

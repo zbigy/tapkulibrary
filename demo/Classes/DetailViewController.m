@@ -4,7 +4,7 @@
 //
 /*
  
- tapku.com || https://github.com/devinross/tapkulibrary
+ tapku || https://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -41,7 +41,7 @@
 	
     self.toolbar = [[UIToolbar alloc] initWithFrame:CGRectMakeWithPoint(CGPointZero, self.view.bounds.size.width, 44)];
 	self.toolbar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	self.toolbar.items = [NSArray array];
+	self.toolbar.items = @[];
 	[self.view addSubview:self.toolbar];
 }
 
