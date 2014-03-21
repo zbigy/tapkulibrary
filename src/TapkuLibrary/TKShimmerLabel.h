@@ -29,10 +29,16 @@
  
  */
 
-#import <UIKit/UIKit.h>
+@import UIKit;
+
+typedef enum {
+	TKShimmerLabelDirectionLeftToRight,
+	TKShimmerLabelDirectionRightToLeft
+} TKShimmerLabelDirection;
 
 @interface TKShimmerLabel : UILabel
 
 @property (nonatomic,strong) CAGradientLayer *textHighlightLayer;
+@property (nonatomic,assign) TKShimmerLabelDirection direction;
 
 @end

@@ -80,14 +80,14 @@
 	[self.view addSubview:infoButton];
 	
 	
-	UIView *center = [[UIView alloc] initWithFrame:CGRectMake(self.view.bounds.size.width/2.0, 0,1, 1000)];
+	UIView *center = [[UIView alloc] initWithFrame:CGRectMake(CGRectGetWidth(self.view.bounds)/2.0, 0,1, 1000)];
 	center.backgroundColor = [UIColor redColor];
 	center.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
 	//[self.view addSubview:center];
 	
 	
 	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Tap Me" style:UIBarButtonItemStyleBordered target:self action:@selector(info)];
-	self.toolbarItems = @[item];
+	self.navigationItem.rightBarButtonItem = item;
 
 	
 
@@ -200,7 +200,7 @@
 }
 
 - (void) coverflowView:(TKCoverflowView*)coverflowView coverAtIndexWasBroughtToFront:(NSInteger)index{
-	NSLog(@"Cover at index %d was brought to front",index);
+	NSLog(@"Cover at index %@ was brought to front",@(index));
 }
 
 

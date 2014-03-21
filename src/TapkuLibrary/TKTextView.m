@@ -64,14 +64,12 @@
 		if(self.placeHolderLabel.superview==nil){
 			[self addSubview:self.placeHolderLabel];
 			[self sendSubviewToBack:self.placeHolderLabel];
-			
-			
 		}
 		
 		if([self respondsToSelector:@selector(textContainer)])
-			self.placeHolderLabel.frame = CGRectMake(4, 8, self.bounds.size.width - 8, 0);
+			self.placeHolderLabel.frame = CGRectMake(4, self.textContainerInset.top, CGRectGetWidth(self.bounds) - 8, 0);
 		else
-			self.placeHolderLabel.frame = CGRectMake(8,8,self.bounds.size.width - 16,0);
+			self.placeHolderLabel.frame = CGRectMake(8,8,CGRectGetWidth(self.bounds) - 16,0);
 		
 		
 		
@@ -125,7 +123,7 @@
 - (UILabel*) placeHolderLabel{
 	if(_placeHolderLabel) return _placeHolderLabel;
 	
-	_placeHolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(8,8,self.bounds.size.width - 16,0)];
+	_placeHolderLabel = [[UILabel alloc] initWithFrame:CGRectMake(8,8,CGRectGetWidth(self.bounds) - 16,0)];
 	_placeHolderLabel.lineBreakMode = NSLineBreakByWordWrapping;
 	_placeHolderLabel.numberOfLines = 0;
 	_placeHolderLabel.font = self.font;
@@ -136,7 +134,7 @@
 	if([self respondsToSelector:@selector(textContainer)]){
 		
 		_placeHolderLabel.textColor = [UIColor colorWithWhite:0.80 alpha:1];
-		_placeHolderLabel.frame = CGRectMake(2, 8, self.bounds.size.width - 8, 0);
+		_placeHolderLabel.frame = CGRectMake(2, 8, CGRectGetWidth(self.bounds) - 8, 0);
 		
 	}
 	

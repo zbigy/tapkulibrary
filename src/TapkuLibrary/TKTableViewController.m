@@ -36,10 +36,10 @@
 
 @interface TKTableViewController () {
 @private
-	UITableViewStyle _style;
 	CGPoint _tableViewContentOffset;
 	
 }
+@property (nonatomic,assign) UITableViewStyle style;
 
 @end
 
@@ -56,11 +56,19 @@
 }
 - (id) initWithStyle:(UITableViewStyle)style{
 	if(!(self = [super init])) return nil;
-	_style = style;
+	self.style = style;
 	_tableViewContentOffset = CGPointZero;
 	_clearsSelectionOnViewWillAppear = YES;
 	return self;
 }
+- (void) dealloc{
+	self.tableView.delegate = nil;
+	self.tableView.dataSource = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardDidHideNotification object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 - (void) _unloadSubviews{
 	
 	_tableViewContentOffset = self.tableView.contentOffset;
@@ -124,7 +132,7 @@
 - (UISearchBar*) searchBar{
 	if(_searchBar) return _searchBar;
 	
-	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+	_searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.view.frame), 44)];
 	_searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	return _searchBar;
 }

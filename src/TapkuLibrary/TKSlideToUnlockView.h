@@ -29,9 +29,15 @@
  
  */
 
-#import <UIKit/UIKit.h>
-
+@import UIKit;
+@import AudioToolbox;
 @class TKShimmerLabel;
+
+typedef enum {
+	TKSlideToUnlockViewModeNormal = 0,
+	TKSlideToUnlockViewModeDisabled = 1
+} TKSlideToUnlockViewMode;
+
 
 @interface TKSlideToUnlockView : UIControl <UIScrollViewDelegate>
 
@@ -39,6 +45,8 @@
 @property (nonatomic,strong) UIScrollView *scrollView;
 @property (nonatomic,strong) UIImageView *backgroundView;
 @property (nonatomic,readonly) BOOL isUnlocked;
+
+@property (nonatomic,assign) TKSlideToUnlockViewMode mode;
 
 - (void) resetSlider:(BOOL)animated;
 

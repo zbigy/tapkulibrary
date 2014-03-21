@@ -323,12 +323,12 @@ static UIImage *tileImage;
 	
 	
 	
-	float myColorValues[] = {1, 1, 1, .8};
+	CGFloat myColorValues[] = {1, 1, 1, .8};
     CGColorSpaceRef myColorSpace = CGColorSpaceCreateDeviceRGB();
     CGColorRef whiteColor = CGColorCreate(myColorSpace, myColorValues);
 	//CGContextSetShadowWithColor(context, CGSizeMake(0,1), 0, whiteColor);
 
-	float darkColorValues[] = {0, 0, 0, .5};
+	CGFloat darkColorValues[] = {0, 0, 0, .5};
     CGColorRef darkColor = CGColorCreate(myColorSpace, darkColorValues);
 	
 
@@ -478,13 +478,15 @@ static UIImage *tileImage;
 	 It is if it is the 4th [ or more ] row, App will crash (e.g. select 2012/07/29).
 	 So I added check range of p.x.
 	 */
-	if(p.x > self.bounds.size.width || p.x < 0) return;
-	if(p.y > self.bounds.size.height || p.y < 0) return;
 	
-	NSInteger column = p.x / ROW_WIDTH, row = p.y / ROW_HEIGHT;
+	
+	if(p.x > CGRectGetWidth(self.bounds) || p.x < 0) return;
+	if(p.y > CGRectGetHeight(self.bounds) || p.y < 0) return;
+	
+	NSInteger column = p.x / 46, row = p.y / 44;
 	NSInteger day = 1, portion = 0;
 	
-	if(row == (int) (self.bounds.size.height / ROW_HEIGHT)) row --;
+	if(row == (int) (CGRectGetHeight(self.bounds) / 44)) row --;
 	
 	NSInteger fir = firstWeekday - 1;
 	if(!startOnSunday && fir == 0) fir = 7;
@@ -529,7 +531,7 @@ static UIImage *tileImage;
 	}
 	
 	[self addSubview:self.selectedImageView];
-	self.currentDay.text = [NSString stringWithFormat:@"%d",day];
+	self.currentDay.text = [NSString stringWithFormat:@"%ld",(long)day];
 	
 	if (self.marks.count > 0) {
 		if([self.marks[row * 7 + column] boolValue])
@@ -770,14 +772,14 @@ static UIImage *tileImage;
 	
 }
 - (CGRect) _calculatedFrame{
-	return CGRectMakeWithPoint(self.frame.origin, VIEW_WIDTH, self.tileBox.bounds.size.height + self.tileBox.frame.origin.y);
+	return CGRectMakeWithPoint(self.frame.origin, VIEW_WIDTH, CGRectGetMaxY(self.tileBox.frame));
 }
 - (CGRect) _calculatedDropShadowFrame{
-	return CGRectMake(0, self.tileBox.bounds.size.height + self.tileBox.frame.origin.y, self.bounds.size.width, 6);
+	return CGRectMake(0, CGRectGetMaxY(self.tileBox.frame), CGRectGetWidth(self.bounds), 6);
 }
 - (void) _updateSubviewFramesWithTile:(UIView*)tile{
-	self.tileBox.frame = CGRectMake(0, TOP_BAR_HEIGHT-1,VIEW_WIDTH, tile.frame.size.height);
-	self.frame = CGRectMakeWithPoint(self.frame.origin, VIEW_WIDTH, self.tileBox.frame.size.height+self.tileBox.frame.origin.y);
+	self.tileBox.frame = CGRectMake(0, TOP_BAR_HEIGHT-1,VIEW_WIDTH, CGRectGetHeight(tile.frame));
+	self.frame = CGRectMakeWithPoint(self.frame.origin, VIEW_WIDTH, CGRectGetMaxY(self.tileBox.frame));
 	self.shadow.frame = self.tileBox.frame;
 	self.dropshadow.frame = [self _calculatedDropShadowFrame];
 }
@@ -876,9 +878,9 @@ static UIImage *tileImage;
 		overlap = [self.currentTile.monthDate compare:[dates lastObject]] !=  NSOrderedDescending ? ROW_HEIGHT : 0;
 	
 	
-	float y = isNext ? self.currentTile.bounds.size.height - overlap : newTile.bounds.size.height * -1 + overlap +2;
+	float y = isNext ? CGRectGetHeight(self.currentTile.frame) - overlap : CGRectGetHeight(newTile.frame) * -1 + overlap +2;
 	
-	newTile.frame = CGRectMake(0, y, newTile.frame.size.width, newTile.frame.size.height);
+	newTile.frame = CGRectMakeWithSize(0, y, newTile.frame.size);
 	newTile.alpha = 0;
 	[self.tileBox addSubview:newTile];
 	
@@ -903,11 +905,11 @@ static UIImage *tileImage;
 	
 	
 	if(isNext){
-		self.currentTile.frame = CGRectMakeWithSize(0, -1 * self.currentTile.bounds.size.height + overlap + 2,  self.currentTile.frame.size);
-		newTile.frame = CGRectMake(0, 1, newTile.frame.size.width, newTile.frame.size.height);
+		self.currentTile.frame = CGRectMakeWithSize(0, -1 * CGRectGetHeight(self.currentTile.frame) + overlap + 2,  self.currentTile.frame.size);
+		newTile.frame = CGRectMakeWithSize(0, 1, newTile.frame.size);
 	}else{
-		newTile.frame = CGRectMake(0, 1, newTile.frame.size.width, newTile.frame.size.height);
-		self.currentTile.frame = CGRectMakeWithSize(0,  newTile.frame.size.height - overlap, self.currentTile.frame.size);
+		newTile.frame = CGRectMakeWithSize(0, 1, newTile.frame.size);
+		self.currentTile.frame = CGRectMakeWithSize(0, CGRectGetHeight(newTile.frame) - overlap, self.currentTile.frame.size);
 	}
 	
 	[self _updateSubviewFramesWithTile:newTile];
@@ -934,7 +936,7 @@ static UIImage *tileImage;
 	TKGradientView *gradient = [[TKGradientView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, TOP_BAR_HEIGHT)];
 	gradient.colors = @[[UIColor colorWithHex:0xf4f4f5],[UIColor colorWithHex:0xccccd1]];
 	gradient.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-	UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 44, gradient.bounds.size.width, 1)];
+	UIView *line = [[UIView alloc] initWithFrame:CGRectMake(0, 44, CGRectGetWidth(gradient.frame), 1)];
 	line.backgroundColor = [UIColor colorWithHex:0xaaaeb6];
 	line.autoresizingMask = UIViewAutoresizingFlexibleWidth;
 	[gradient addSubview:line];
@@ -993,7 +995,7 @@ static UIImage *tileImage;
 - (UIView *) tileBox{
 	if(_tileBox) return _tileBox;
 	
-	CGFloat h = self.currentTile ? self.currentTile.frame.size.height : 100;
+	CGFloat h = self.currentTile ? CGRectGetHeight(self.currentTile.frame) : 100;
 	
 	_tileBox = [[UIView alloc] initWithFrame:CGRectMake(0, TOP_BAR_HEIGHT-1, VIEW_WIDTH, h)];
 	_tileBox.clipsToBounds = YES;
@@ -1002,7 +1004,7 @@ static UIImage *tileImage;
 - (UIView *) shadow{
 	if(_shadow) return _shadow;
 	
-	TKGradientView *grad  = [[TKGradientView alloc] initWithFrame:CGRectMake(0, 0, 100, self.frame.size.width)];
+	TKGradientView *grad  = [[TKGradientView alloc] initWithFrame:CGRectMake(0, 0, 100, CGRectGetWidth(self.frame))];
 	grad.colors = @[[UIColor colorWithWhite:0 alpha:0],[UIColor colorWithWhite:0 alpha:0.0],[UIColor colorWithWhite:0 alpha:0.1]];
 	_shadow = grad;
 	_shadow.userInteractionEnabled = NO;
@@ -1011,7 +1013,7 @@ static UIImage *tileImage;
 - (UIView *) dropshadow{
 	if(_dropshadow) return _dropshadow;
 	
-	TKGradientView *grad  = [[TKGradientView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 10)];
+	TKGradientView *grad  = [[TKGradientView alloc] initWithFrame:CGRectMake(0, 0, CGRectGetWidth(self.frame), 10)];
 	grad.backgroundColor = [UIColor clearColor];
 	grad.colors = @[[UIColor colorWithWhite:0 alpha:0.3],[UIColor colorWithWhite:0 alpha:0.0]];
 	_dropshadow = grad;

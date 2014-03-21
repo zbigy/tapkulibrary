@@ -1,10 +1,10 @@
 //
-//  HUDViewController.h
-//  Created by Devin Ross on 7/4/09.
+//  UIAlertView+TKCategory.m
+//  Created by Devin Ross on 10/4/13.
 //
 /*
  
- tapku || https://github.com/devinross/tapkulibrary
+ tapku || http://github.com/devinross/tapkulibrary
  
  Permission is hereby granted, free of charge, to any person
  obtaining a copy of this software and associated documentation
@@ -29,14 +29,20 @@
  
  */
 
+#import "UIAlertView+TKCategory.h"
 
-#import <TapkuLibrary/TapkuLibrary.h>
+@implementation UIAlertView (TKCategory)
 
-@interface HUDViewController : UIViewController 
 
-@property (nonatomic,strong) TKProgressBarView *progressBar;
-@property (nonatomic,strong) TKProgressBarView *progressBarAlternative;
-@property (nonatomic,strong) TKProgressAlertView *alertView;
-@property (nonatomic,strong) TKProgressCircleView *progressCircle;
++ (UIAlertView*) showAlertViewWithTitle:(NSString*)title message:(NSString*)message dismiss:(NSString*)dismiss{
+	
+	if(!dismiss) dismiss = NSLocalizedString(@"Dismiss", @"Dismiss Alert View");
+	
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:dismiss otherButtonTitles:nil];
+	[alert show];
+	
+	return alert;
+	
+}
 
 @end

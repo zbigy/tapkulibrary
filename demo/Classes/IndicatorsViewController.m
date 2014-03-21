@@ -29,10 +29,9 @@
  
  */
 
-#import "HUDViewController.h"
+#import "IndicatorsViewController.h"
 
-
-@implementation HUDViewController
+@implementation IndicatorsViewController
 
 - (id) init{
 	if(!(self=[super init])) return nil;
@@ -40,99 +39,82 @@
 	return self;
 }
 
+#pragma mark View Lifecycle
+- (void) loadView{
+	[super loadView];
+	self.view.backgroundColor = [UIColor colorWithWhite:1 alpha:1];
+	
+	[self.view addSubview:self.progressBar];
+	[self.view addSubview:self.progressCircle];
+	[self.view addSubview:self.progressBarAlternative];
+	
+	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Tap Me" style:UIBarButtonItemStyleBordered target:self action:@selector(tapme)];
+	self.navigationItem.rightBarButtonItem = item;
+	
+}
+- (void) viewDidAppear:(BOOL)animated{
+	[super viewDidAppear:animated];	
+	[self stepTwo:nil];
+}
 
+#pragma mark Actions
 - (void) tapme{
-
+	
 	[self.progressCircle setTwirlMode:!self.progressCircle.isTwirling];
 	
 	if(!self.progressCircle.isTwirling){
 		[self.progressCircle setProgress:0 animated:NO];
 		[self.progressBar setProgress:0];
 		[self.progressBarAlternative setProgress:0 animated:NO];
-
 		
-		[self performSelector:@selector(stepTwo) withObject:nil afterDelay:2];
-		[self performSelector:@selector(stepThree) withObject:nil afterDelay:4];
 
+		TKProgressAlertView *alert = [[TKProgressAlertView alloc] initWithProgressTitle:@"Loading important stuff!"];
+		alert.progressBar.progress = 0;
+		[alert show];
 		
-		self.alertView.progressBar.progress = 0;
-		[self.alertView show];
+		[self performSelector:@selector(stepTwo:) withObject:alert afterDelay:2];
+		[self performSelector:@selector(stepThree:) withObject:alert afterDelay:4];
+		
 	}
-
-
+	
+	
 }
-- (void) stepTwo{
+- (void) stepTwo:(TKProgressAlertView*)alert{
 	
 	[self.progressCircle setProgress:1 animated:YES];
 	[self.progressBar setProgress:1 animated:YES];
 	[self.progressBarAlternative setProgress:1 animated:YES];
-
-	[self.alertView.progressBar setProgress:1 animated:YES];
-
-}
-- (void) stepThree{
 	
-	[self.alertView hide];
+	[alert.progressBar setProgress:1 animated:YES];
 	
 }
-
-
-#pragma mark View Lifecycle
-- (void) loadView{
-	[super loadView];
-	self.view.backgroundColor = [UIColor colorWithWhite:0.7 alpha:1];
+- (void) stepThree:(TKProgressAlertView*)alert{
 	
-	[self.view addSubview:self.progressBar];
-	[self.view addSubview:self.progressCircle];
-	[self.view addSubview:self.progressBarAlternative];
-	
-	
-	
-	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Tap Me" style:UIBarButtonItemStyleBordered target:self action:@selector(tapme)];
-
-	
-	if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-		self.navigationItem.rightBarButtonItem = item;
-	}else{
-		self.toolbarItems = @[item];
-	}
+	[alert hide];
 	
 }
-- (void) viewDidAppear:(BOOL)animated{
-	[super viewDidAppear:animated];	
-	[self stepTwo];
-}
-
-
 
 #pragma mark Properties
 - (TKProgressBarView *) progressBar{
 	if(_progressBar) return _progressBar;
 	
 	_progressBar = [[TKProgressBarView alloc] initWithStyle:TKProgressBarViewStyleShort];
-	_progressBar.center = CGPointMake(self.view.bounds.size.width/2, 220);
+	_progressBar.center = CGPointMake(CGRectGetWidth(self.view.bounds)/2, 220);
 	return _progressBar;
 }
 - (TKProgressBarView *) progressBarAlternative{
 	if(_progressBarAlternative) return _progressBarAlternative;
 	
 	_progressBarAlternative = [[TKProgressBarView alloc] initWithStyle:TKProgressBarViewStyleLong];
-	_progressBarAlternative.center = CGPointMake(self.view.bounds.size.width/2, 320);
+	_progressBarAlternative.center = CGPointMake(CGRectGetWidth(self.view.bounds)/2, 320);
 	return _progressBarAlternative;
-}
-- (TKProgressAlertView *) alertView{
-	if(_alertView) return _alertView;
-	
-	_alertView = [[TKProgressAlertView alloc] initWithProgressTitle:@"Loading important stuff!"];
-	return _alertView;
 }
 - (TKProgressCircleView *) progressCircle{
 	if(_progressCircle) return _progressCircle;
 
 	_progressCircle = [[TKProgressCircleView alloc] init];
-	_progressCircle.center = CGPointMake(self.view.bounds.size.width/2, 120);
+	_progressCircle.center = CGPointMake(CGRectGetWidth(self.view.bounds)/2, 120);
 	return _progressCircle;
 }
-
 
 @end

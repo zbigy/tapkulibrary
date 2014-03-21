@@ -43,10 +43,8 @@
 	self.view.backgroundColor = [UIColor colorWithWhite:0.8 alpha:1];
 
 
-	
-	CGFloat y = self.view.bounds.size.height/2.0;
-	CGFloat x = self.view.bounds.size.width/2.0;
-	
+	CGFloat y = CGRectGetHeight(self.view.bounds)/2.0;
+	CGFloat x = CGRectGetWidth(self.view.bounds)/2.0;
 	self.circle = [[TKProgressCircleView alloc] init];
 	self.circle.center = CGPointMake(x,y);
 	self.circle.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin | UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin;
@@ -55,13 +53,8 @@
 	
 	
 	UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Start" style:UIBarButtonItemStyleBordered target:self action:@selector(start)];
+	self.navigationItem.rightBarButtonItem = item;
 
-	
-	if([[UIDevice currentDevice] userInterfaceIdiom] == UIUserInterfaceIdiomPhone){
-		self.navigationItem.rightBarButtonItem = item;
-	}else{
-		self.toolbarItems = @[item];
-	}
 
 }
 
@@ -83,13 +76,13 @@
 - (void) request:(TKHTTPRequest*)request didReceiveTotalBytes:(NSInteger)received ofExpectedBytes:(NSInteger)total{
 	
 	CGFloat percentage = (CGFloat)received / (CGFloat)total;
-	NSLog(@"Received... %d of %d (%d%%)",received,total,(NSInteger)(percentage*100));
+	NSLog(@"Received... %@ of %@ (%@%%)",@(received),@(total),@(percentage*100));
 	[self.circle setProgress:percentage animated:YES];
 }
 - (void) networkRequestDidFinish:(TKHTTPRequest*)request{
 	NSData *data = [request responseData];
 
-	NSLog(@"Finished... %@ (length %d)",request,data.length);
+	NSLog(@"Finished... %@ (length %lu)",request,(unsigned long)data.length);
 
 }
 

@@ -31,6 +31,7 @@
 
 
 #import "TKWebViewController.h"
+#import "UIBarButtonItem+TKCategory.h"
 
 @implementation TKWebViewController
 
@@ -39,16 +40,70 @@
 	self.URL = URL;
 	return self;
 }
+- (id) initWithURLRequest:(NSURLRequest*)URLRequest{
+	if(!(self=[super init])) return nil;
+	self.URLRequest = URLRequest;
+	return self;
+}
 
+#pragma mark View Lifecycle
 - (void) loadView{
 	[super loadView];
 	self.webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
+	self.webView.delegate = self;
+	self.webView.scalesPageToFit = YES;
 	self.webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
 	[self.view addSubview:self.webView];
 }
 - (void) viewDidLoad{
 	[super viewDidLoad];
-	[self.webView loadRequest:[NSURLRequest requestWithURL:self.URL]];
+	if(self.URL)
+		[self.webView loadRequest:[NSURLRequest requestWithURL:self.URL]];
+	else if(self.URLRequest)
+		[self.webView loadRequest:self.URLRequest];
+}
+
+#pragma mark Button Actions
+- (void) showActionSheet:(id)sender{
+	NSURL *currentURL = self.webView.request.URL;
+	UIActivityViewController *activityVC = [[UIActivityViewController alloc] initWithActivityItems:@[currentURL] applicationActivities:nil];
+	activityVC.excludedActivityTypes = @[UIActivityTypePostToWeibo, UIActivityTypeSaveToCameraRoll, UIActivityTypeAssignToContact];
+	[self presentViewController:activityVC animated:YES completion:nil];
+}
+
+#pragma mark UIWebviewDelegate
+- (void) webViewDidStartLoad:(UIWebView *)webView{
+	
+	UIActivityIndicatorViewStyle style;
+	if(self.navigationController.navigationBar.barTintColor){
+		UIColor *clr = self.navigationController.navigationBar.barTintColor;
+		const CGFloat *componentColors = CGColorGetComponents(clr.CGColor);
+		CGFloat colorBrightness = ((componentColors[0] * 299) + (componentColors[1] * 587) + (componentColors[2] * 114)) / 1000;
+		style = colorBrightness < 0.6 ? UIActivityIndicatorViewStyleWhite : UIActivityIndicatorViewStyleGray ;
+	}else{
+		style = UIActivityIndicatorViewStyleGray;
+	}
+	
+	self.navigationItem.rightBarButtonItem = [UIBarButtonItem activityItemWithIndicatorStyle:style];
+	
+}
+- (void) webViewDidFinishLoad:(UIWebView *)webView {
+	self.navigationItem.rightBarButtonItem = [UIBarButtonItem actionItemWithTarget:self action:@selector(showActionSheet:)];
+	self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+}
+- (void) webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
+	self.navigationItem.rightBarButtonItem = [UIBarButtonItem actionItemWithTarget:self action:@selector(showActionSheet:)];
+	self.title = [self.webView stringByEvaluatingJavaScriptFromString:@"document.title"];
+}
+- (BOOL) webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+	
+	if(self.navigationController && (navigationType == UIWebViewNavigationTypeFormSubmitted || navigationType == UIWebViewNavigationTypeLinkClicked)){
+		TKWebViewController *vc = [[TKWebViewController alloc] initWithURLRequest:request];
+		[self.navigationController pushViewController:vc animated:YES];
+		return NO;
+	}
+	
+	return YES;
 }
 
 @end

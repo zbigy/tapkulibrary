@@ -29,8 +29,8 @@
  
  */
 
-#import <UIKit/UIKit.h>
-#import <QuartzCore/QuartzCore.h>
+@import UIKit;
+@import QuartzCore;
 
 #pragma mark - TKCalendarDayEventView
 /** `TKCalendarDayEventView` is displayed by `TKCalendarDayView`. */
@@ -57,6 +57,8 @@
 
 /** The location label for the event. */
 @property (nonatomic,strong) UILabel *locationLabel;
+
+@property (nonatomic,strong) UIView *edgeView;
 
 - (CGFloat) contentHeight;
 
